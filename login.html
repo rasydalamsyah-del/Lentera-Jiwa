@@ -722,6 +722,7 @@ select option{background:#082218;color:#fff}
 </div><!-- /card -->
 </div><!-- /stage -->
 
+<script src="js/auth.js"></script>
 <script>
 // ===== STATE =====
 let cur = 'scW';
@@ -847,7 +848,10 @@ function doLogin() {
   const u = g('lU'), p = g('lP');
   if (!u || !p) { sN(nf, 'err', 'Harap isi username dan kata sandi.'); return; }
   if (!caps['lCap']) { sN(nf, 'err', 'Selesaikan verifikasi reCAPTCHA terlebih dahulu.'); return; }
-  sN(nf, 'ok', '✓ Login berhasil! Selamat datang kembali 👋');
+  const res = LJ_AUTH.login(u, p);
+  if (!res.ok) { sN(nf, 'err', res.msg); return; }
+  sN(nf, 'ok', '✓ Login berhasil! Selamat datang, ' + res.user.nama + ' 👋');
+  setTimeout(function() { window.location.href = 'index.html'; }, 1000);
 }
 
 // ===== FORGOT =====
@@ -925,7 +929,16 @@ function subReg() {
   const exp = mOp === '+' ? mA2 + mB2 : mOp === '-' ? mA2 - mB2 : mA2 * mB2;
   if (parseInt(g('mA')) !== exp) { sN(nf, 'err', 'Jawaban verifikasi keamanan salah. Coba lagi.'); return; }
   if (!document.getElementById('tCk').checked) { sN(nf, 'err', 'Anda harus menyetujui Syarat & Ketentuan.'); return; }
-  document.getElementById('sucM').innerHTML = `Akun <strong>Mahasiswa</strong> Anda telah berhasil dibuat!<br>Periksa email untuk tautan aktivasi.`;
+  const regData = {
+    username: g('rU'), nama: g('rN'), email: g('rE'),
+    phone: g('rPh'), password: g('rP'),
+    usia: g('rA'), gender: gen,
+    univ: document.getElementById('univV').value,
+    nim: g('rNIM'), semester: g('rSem')
+  };
+  const res = LJ_AUTH.register(regData);
+  if (!res.ok) { sN(nf, 'err', res.msg); return; }
+  document.getElementById('sucM').innerHTML = `Akun <strong>Mahasiswa</strong> atas nama <strong>${res.user.nama}</strong> berhasil dibuat!<br>Silakan login untuk melanjutkan.`;
   go('scSuc', 'r');
   confetti();
 }
