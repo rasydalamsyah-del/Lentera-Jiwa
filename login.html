@@ -843,12 +843,13 @@ function tPw(id, ic) {
 }
 
 // ===== LOGIN =====
-function doLogin() {
+async function doLogin() {
   const nf = document.getElementById('lNf');
   const u = g('lU'), p = g('lP');
   if (!u || !p) { sN(nf, 'err', 'Harap isi username dan kata sandi.'); return; }
   if (!caps['lCap']) { sN(nf, 'err', 'Selesaikan verifikasi reCAPTCHA terlebih dahulu.'); return; }
-  const res = LJ_AUTH.login(u, p);
+  sN(nf, 'ok', '⏳ Sedang masuk...');
+  const res = await LJ_AUTH.login(u, p);
   if (!res.ok) { sN(nf, 'err', res.msg); return; }
   sN(nf, 'ok', '✓ Login berhasil! Selamat datang, ' + res.user.nama + ' 👋');
   setTimeout(function() { window.location.href = 'index.html'; }, 1000);
@@ -920,7 +921,7 @@ function v2() {
 }
 
 // ===== SUBMIT REG =====
-function subReg() {
+async function subReg() {
   const nf = document.getElementById('r3Nf');
   const otps = document.querySelectorAll('#scR3 .oti');
   const otp = [...otps].map(i => i.value).join('');
@@ -936,7 +937,8 @@ function subReg() {
     univ: document.getElementById('univV').value,
     nim: g('rNIM'), semester: g('rSem')
   };
-  const res = LJ_AUTH.register(regData);
+  sN(nf, 'ok', '⏳ Mendaftarkan akun...');
+  const res = await LJ_AUTH.register(regData);
   if (!res.ok) { sN(nf, 'err', res.msg); return; }
   document.getElementById('sucM').innerHTML = `Akun <strong>Mahasiswa</strong> atas nama <strong>${res.user.nama}</strong> berhasil dibuat!<br>Silakan login untuk melanjutkan.`;
   go('scSuc', 'r');
