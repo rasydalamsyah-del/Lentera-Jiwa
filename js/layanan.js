@@ -226,45 +226,37 @@
       if(typing)typing.style.display='flex';
       scr();
       var reply=null;
-      try{
-        var prompt=encodeURIComponent(txt);
-        var sys=encodeURIComponent(SYS);
-        var r=await Promise.race([
-          fetch('https://text.pollinations.ai/'+prompt+'?system='+sys+'&model=openai'),
-          new Promise(function(_,rj){setTimeout(function(){rj(new Error('timeout'));},12000);})
-        ]);
-        var raw=(await r.text()).trim();
-        // Ambil teks terakhir setelah warning jika ada
-        if(raw.includes('will continue to work normally')){
-          var parts=raw.split('will continue to work normally.');
-          raw=parts[parts.length-1].trim();
-        }
-        if(raw.length>2)reply=raw;
-      }catch(e){console.error('Pollinations error:',e);}
-      // Fallback: Puter.js
-      if(!reply&&typeof puter!=='undefined'){
+
+      // PRIMARY: Puter.js (gratis, tidak ada limit)
+      if(typeof puter!=='undefined'){
         try{
           var res=await puter.ai.chat([
             {role:'system',content:SYS},
             {role:'user',content:txt}
           ]);
           reply=typeof res==='string'?res:(res&&res.message&&res.message.content?res.message.content:null);
-        }catch(e2){console.error('Puter error:',e2);}
+          if(reply)reply=reply.trim();
+        }catch(e){console.error('Puter error:',e);}
       }
-      // Retry sekali jika gagal
+
+      // FALLBACK: Pollinations
       if(!reply){
         try{
-          var prompt2=encodeURIComponent(txt);
-          var sys2=encodeURIComponent(SYS);
-          var r2=await fetch('https://text.pollinations.ai/'+prompt2+'?system='+sys2+'&model=openai&seed='+Math.floor(Math.random()*999));
-          var raw2=(await r2.text()).trim();
-          if(raw2.includes('will continue to work normally')){
-            var parts2=raw2.split('will continue to work normally.');
-            raw2=parts2[parts2.length-1].trim();
+          var prompt=encodeURIComponent(txt);
+          var sys=encodeURIComponent(SYS);
+          var r=await Promise.race([
+            fetch('https://text.pollinations.ai/'+prompt+'?system='+sys+'&model=openai&seed='+Math.floor(Math.random()*999)),
+            new Promise(function(_,rj){setTimeout(function(){rj(new Error('timeout'));},12000);})
+          ]);
+          var raw=(await r.text()).trim();
+          if(raw.includes('will continue to work normally')){
+            var parts=raw.split('will continue to work normally.');
+            raw=parts[parts.length-1].trim();
           }
-          if(raw2.length>2)reply=raw2;
-        }catch(e3){}
+          if(raw.length>2)reply=raw;
+        }catch(e2){console.error('Pollinations error:',e2);}
       }
+
       if(!reply)reply='Maaf, ada gangguan koneksi 🪔 Coba lagi sebentar ya.';
       if(typing)typing.style.display='none';
       EMB.aiLoading=false;
