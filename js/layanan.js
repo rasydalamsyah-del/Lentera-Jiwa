@@ -234,11 +234,10 @@
           new Promise(function(_,rj){setTimeout(function(){rj(new Error('timeout'));},12000);})
         ]);
         var raw=(await r.text()).trim();
-        // Strip warning jika ada, ambil teks setelah baris terakhir warning
-        if(raw.includes('IMPORTANT NOTICE')){
-          var lines=raw.split('\n');
-          var idx=lines.findIndex(function(l){return l.includes('will continue to work normally');});
-          raw=idx!==-1?lines.slice(idx+1).join('\n').trim():'';
+        // Ambil teks terakhir setelah warning jika ada
+        if(raw.includes('will continue to work normally')){
+          var parts=raw.split('will continue to work normally.');
+          raw=parts[parts.length-1].trim();
         }
         if(raw.length>2)reply=raw;
       }catch(e){console.error('Pollinations error:',e);}
