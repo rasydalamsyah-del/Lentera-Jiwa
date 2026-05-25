@@ -252,31 +252,6 @@
       embRender();
     }
 
-      // FALLBACK: Pollinations
-      if(!reply){
-        try{
-          var prompt=encodeURIComponent(txt);
-          var sys=encodeURIComponent(SYS);
-          var r=await Promise.race([
-            fetch('https://text.pollinations.ai/'+prompt+'?system='+sys+'&model=openai&seed='+Math.floor(Math.random()*999)),
-            new Promise(function(_,rj){setTimeout(function(){rj(new Error('timeout'));},12000);})
-          ]);
-          var raw=(await r.text()).trim();
-          if(raw.includes('will continue to work normally')){
-            var parts=raw.split('will continue to work normally.');
-            raw=parts[parts.length-1].trim();
-          }
-          if(raw.length>2)reply=raw;
-        }catch(e2){console.error('Pollinations error:',e2);}
-      }
-
-      if(!reply)reply='Maaf, ada gangguan koneksi 🪔 Coba lagi sebentar ya.';
-      if(typing)typing.style.display='none';
-      EMB.aiLoading=false;
-      EMB.aiMsgs.push({role:'ai',text:reply,ts:ts()});
-      embRender();
-    }
-
     function embPakarSim(id,q){
       var delay=8000+Math.random()*10000;
       var tmpl=[
