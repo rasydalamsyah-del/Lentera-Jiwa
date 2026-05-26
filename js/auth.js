@@ -82,6 +82,28 @@ const LJ_AUTH = (function() {
     return true;
   }
 
+  /* ── Kirim OTP ── */
+  async function sendOTP(email) {
+    const url = API + '?action=sendOTP&email=' + encodeURIComponent(email);
+    try {
+      const res = await fetch(url);
+      return await res.json();
+    } catch(e) {
+      return { ok: false, msg: 'Koneksi gagal.' };
+    }
+  }
+
+  /* ── Verifikasi OTP ── */
+  async function verifyOTP(email, otp) {
+    const url = API + '?action=verifyOTP&email=' + encodeURIComponent(email) + '&otp=' + encodeURIComponent(otp);
+    try {
+      const res = await fetch(url);
+      return await res.json();
+    } catch(e) {
+      return { ok: false, msg: 'Koneksi gagal.' };
+    }
+  }
+
   return {
     register:    register,
     login:       login,
@@ -89,7 +111,9 @@ const LJ_AUTH = (function() {
     getSession:  getSession,
     isLoggedIn:  isLoggedIn,
     requireLogin: requireLogin,
-    verifyToken: verifyToken
+    verifyToken: verifyToken,
+    sendOTP:     sendOTP,
+    verifyOTP:   verifyOTP
   };
 
 })();

@@ -909,14 +909,17 @@ function v1() {
 }
 
 // ===== VALIDATE STEP 2 =====
-function v2() {
+async function v2() {
   const nf = document.getElementById('r2Nf');
   const pw = g('rP'), pwc = g('rPC'), em = g('rE'), ph = g('rPh');
   if (pw.length < 8) { sN(nf, 'err', 'Kata sandi minimal 8 karakter.'); return; }
   if (pw !== pwc) { sN(nf, 'err', 'Kata sandi tidak cocok.'); return; }
   if (!/^[^@]+@[^@]+\.[^@]{2,}$/.test(em)) { sN(nf, 'err', 'Format email tidak valid.'); return; }
   if (!/^(\+62|62|0)[0-9]{8,13}$/.test(ph.replace(/[-\s]/g, ''))) { sN(nf, 'err', 'Format nomor telepon tidak valid.'); return; }
-  sN(nf, '', '');
+  sN(nf, 'ok', '📩 Mengirim kode OTP ke ' + em + '...');
+  const otpRes = await LJ_AUTH.sendOTP(em);
+  if (!otpRes.ok) { sN(nf, 'err', 'Gagal kirim OTP: ' + otpRes.msg); return; }
+  sN(nf, 'ok', '✅ Kode OTP terkirim ke ' + em);
   goR(3);
 }
 
@@ -925,7 +928,10 @@ async function subReg() {
   const nf = document.getElementById('r3Nf');
   const otps = document.querySelectorAll('#scR3 .oti');
   const otp = [...otps].map(i => i.value).join('');
-  if (otp.length < 6) { sN(nf, 'err', 'Masukkan kode OTP 6 digit dari email.'); return; }
+  if (otp.length < 5) { sN(nf, 'err', 'Masukkan kode OTP 5 digit dari email.'); return; }
+  sN(nf, 'ok', '⏳ Memverifikasi OTP...');
+  const otpCheck = await LJ_AUTH.verifyOTP(g('rE'), otp);
+  if (!otpCheck.ok) { sN(nf, 'err', otpCheck.msg); return; }
   if (!document.getElementById('ktmF').files[0]) { sN(nf, 'err', 'Upload foto KTM Anda terlebih dahulu.'); return; }
   const exp = mOp === '+' ? mA2 + mB2 : mOp === '-' ? mA2 - mB2 : mA2 * mB2;
   if (parseInt(g('mA')) !== exp) { sN(nf, 'err', 'Jawaban verifikasi keamanan salah. Coba lagi.'); return; }
