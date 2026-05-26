@@ -664,12 +664,12 @@ select option{background:#082218;color:#fff}
           <p style="font-size:.77rem;color:var(--teal);font-weight:600;margin-bottom:3px">📧 Kode OTP Email</p>
           <p style="font-size:.72rem;color:var(--text-w3);margin-bottom:9px">Kode 6 digit dikirim ke email Anda</p>
           <div class="otp-row">
-            <input class="iw oti" type="text" maxlength="1" oninput="oN(this,0)">
-            <input class="iw oti" type="text" maxlength="1" oninput="oN(this,1)">
-            <input class="iw oti" type="text" maxlength="1" oninput="oN(this,2)">
-            <input class="iw oti" type="text" maxlength="1" oninput="oN(this,3)">
-            <input class="iw oti" type="text" maxlength="1" oninput="oN(this,4)">
-            <input class="iw oti" type="text" maxlength="1" oninput="oN(this,5)">
+            <input class="iw oti" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" oninput="oN(this,0)">
+            <input class="iw oti" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" oninput="oN(this,1)">
+            <input class="iw oti" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" oninput="oN(this,2)">
+            <input class="iw oti" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" oninput="oN(this,3)">
+            <input class="iw oti" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" oninput="oN(this,4)">
+            <input class="iw oti" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" oninput="oN(this,5)">
           </div>
           <p style="font-size:.7rem;color:var(--text-w3)">Tidak terima? <a onclick="resOtp()" style="color:var(--teal);cursor:pointer">Kirim ulang</a></p>
         </div>
@@ -928,7 +928,7 @@ async function subReg() {
   const nf = document.getElementById('r3Nf');
   const otps = document.querySelectorAll('#scR3 .oti');
   const otp = [...otps].map(i => i.value).join('');
-  if (otp.length < 5) { sN(nf, 'err', 'Masukkan kode OTP 5 digit dari email.'); return; }
+  if (otp.length < 6) { sN(nf, 'err', 'Masukkan kode OTP 6 digit dari email.'); return; }
   sN(nf, 'ok', '⏳ Memverifikasi OTP...');
   const otpCheck = await LJ_AUTH.verifyOTP(g('rE'), otp);
   if (!otpCheck.ok) { sN(nf, 'err', otpCheck.msg); return; }
