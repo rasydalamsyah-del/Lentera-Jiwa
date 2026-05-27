@@ -1,0 +1,166 @@
+/* ═══════════════════════════════════════
+   PROFIL PAGE
+═══════════════════════════════════════ */
+.profil-page { min-height: 100vh; background: var(--bg-base, #f8f7ff); padding-bottom: 80px; }
+
+/* ── Hero card ── */
+.profil-hero {
+  background: linear-gradient(135deg, #2d2550 0%, #7c3aed 100%);
+  padding: 60px 20px 80px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.profil-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 70% 30%, rgba(124,58,237,.4) 0%, transparent 60%);
+  pointer-events: none;
+}
+.profil-avatar-wrap { position: relative; display: inline-block; margin-bottom: 16px; }
+.profil-avatar {
+  width: 90px; height: 90px; border-radius: 50%;
+  background: linear-gradient(135deg, #00c896, #7c3aed);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 36px; font-weight: 700; color: white;
+  border: 4px solid rgba(255,255,255,.3);
+  box-shadow: 0 8px 32px rgba(0,0,0,.3);
+  margin: 0 auto;
+}
+.profil-avatar img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+.profil-role-badge {
+  position: absolute; bottom: 0; right: -4px;
+  background: #00c896; color: white;
+  font-size: 11px; font-weight: 600;
+  padding: 3px 8px; border-radius: 20px;
+  border: 2px solid white;
+}
+.profil-nama { font-size: 22px; font-weight: 700; color: white; margin: 0 0 4px; }
+.profil-username { font-size: 14px; color: rgba(255,255,255,.65); margin: 0 0 8px; }
+.profil-email-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,.12); backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 20px; padding: 5px 14px;
+  font-size: 13px; color: rgba(255,255,255,.9);
+}
+
+/* ── Stats row ── */
+.profil-stats {
+  display: flex; gap: 0;
+  background: white;
+  border-radius: 16px;
+  margin: -28px 20px 24px;
+  box-shadow: 0 4px 24px rgba(45,37,80,.1);
+  overflow: hidden;
+  position: relative; z-index: 2;
+}
+.profil-stat {
+  flex: 1; padding: 16px 8px; text-align: center;
+  border-right: 1px solid #f0eeff;
+}
+.profil-stat:last-child { border-right: none; }
+.profil-stat-val { font-size: 20px; font-weight: 700; color: #2d2550; }
+.profil-stat-lbl { font-size: 11px; color: #888; margin-top: 2px; }
+
+/* ── Section cards ── */
+.profil-section { margin: 0 16px 16px; }
+.profil-card {
+  background: white; border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(45,37,80,.06);
+  overflow: hidden;
+}
+.profil-card-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 18px 12px;
+  border-bottom: 1px solid #f5f3ff;
+}
+.profil-card-title {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 15px; font-weight: 700; color: #2d2550;
+}
+.profil-card-title span.ic { font-size: 18px; }
+.profil-edit-btn {
+  font-size: 13px; color: #7c3aed; font-weight: 600;
+  background: none; border: none; cursor: pointer; padding: 4px 8px;
+  border-radius: 8px;
+  transition: background .2s;
+}
+.profil-edit-btn:hover { background: #f5f3ff; }
+
+/* ── Info rows ── */
+.profil-info-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 13px 18px;
+  border-bottom: 1px solid #f9f8ff;
+}
+.profil-info-row:last-child { border-bottom: none; }
+.profil-info-icon { font-size: 18px; width: 24px; text-align: center; flex-shrink: 0; }
+.profil-info-body { flex: 1; min-width: 0; }
+.profil-info-lbl { font-size: 11px; color: #999; text-transform: uppercase; letter-spacing: .5px; }
+.profil-info-val { font-size: 15px; color: #1a1a2e; font-weight: 500; margin-top: 1px; }
+.profil-info-val.edit-mode { display: none; }
+
+/* ── Edit input ── */
+.profil-input {
+  width: 100%; border: 1.5px solid #e0d9ff; border-radius: 8px;
+  padding: 8px 12px; font-size: 15px; color: #1a1a2e;
+  outline: none; background: #faf9ff;
+  transition: border-color .2s;
+  display: none;
+}
+.profil-input:focus { border-color: #7c3aed; }
+.profil-select {
+  width: 100%; border: 1.5px solid #e0d9ff; border-radius: 8px;
+  padding: 8px 12px; font-size: 15px; color: #1a1a2e;
+  outline: none; background: #faf9ff;
+  display: none;
+}
+
+/* Edit mode active */
+.profil-card.editing .profil-info-val { display: none; }
+.profil-card.editing .profil-info-val.edit-mode { display: block; }
+.profil-card.editing .profil-input,
+.profil-card.editing .profil-select { display: block; }
+.profil-card.editing .profil-edit-btn { color: #e74c3c; }
+
+/* ── Save button ── */
+.profil-save-btn {
+  display: none;
+  width: calc(100% - 36px); margin: 0 18px 16px;
+  background: linear-gradient(135deg, #7c3aed, #00c896);
+  color: white; border: none; border-radius: 12px;
+  padding: 14px; font-size: 15px; font-weight: 600;
+  cursor: pointer; transition: opacity .2s;
+}
+.profil-save-btn:active { opacity: .85; }
+.profil-card.editing .profil-save-btn { display: block; }
+
+/* ── Logout button ── */
+.profil-logout-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; padding: 14px;
+  background: none; border: 1.5px solid #fde8e8; border-radius: 12px;
+  color: #e74c3c; font-size: 15px; font-weight: 600;
+  cursor: pointer; margin: 16px 0 0;
+  transition: background .2s;
+}
+.profil-logout-btn:hover { background: #fff5f5; }
+
+/* ── Login time ── */
+.profil-login-time {
+  text-align: center; font-size: 12px; color: #bbb;
+  margin-top: 8px;
+}
+
+/* ── Toast notif ── */
+.profil-toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px);
+  background: #2d2550; color: white; border-radius: 12px;
+  padding: 12px 20px; font-size: 14px; font-weight: 500;
+  box-shadow: 0 8px 24px rgba(0,0,0,.2);
+  opacity: 0; transition: all .3s; z-index: 9999;
+  pointer-events: none; white-space: nowrap;
+}
+.profil-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
