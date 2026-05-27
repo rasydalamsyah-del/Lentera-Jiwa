@@ -953,7 +953,9 @@ async function subReg() {
   sN(nf, 'ok', '⏳ Mendaftarkan akun...');
   const res = await LJ_AUTH.register(regData);
   if (!res.ok) { sN(nf, 'err', res.msg); return; }
-  document.getElementById('sucM').innerHTML = `Akun <strong>Mahasiswa</strong> atas nama <strong>${res.user.nama}</strong> berhasil dibuat!<br>Silakan login untuk melanjutkan.`;
+  // Auto login setelah register
+  const loginRes = await LJ_AUTH.login(regData.username, regData.password);
+  document.getElementById('sucM').innerHTML = `Akun <strong>Mahasiswa</strong> atas nama <strong>${res.user.nama}</strong> berhasil dibuat!<br>Kamu sudah masuk secara otomatis.`;
   go('scSuc', 'r');
   confetti();
 }
