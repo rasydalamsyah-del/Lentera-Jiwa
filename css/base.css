@@ -917,6 +917,7 @@ h1, h2, h3, h4, h5, h6 {
 .nav-drawer.is-open .nav-drawer-link:nth-child(4) { transition-delay: 0.23s; opacity: 1; transform: translate3d(0,0,0); }
 .nav-drawer.is-open .nav-drawer-link:nth-child(5) { transition-delay: 0.28s; opacity: 1; transform: translate3d(0,0,0); }
 .nav-drawer.is-open .nav-drawer-link:nth-child(6) { transition-delay: 0.33s; opacity: 1; transform: translate3d(0,0,0); }
+.nav-drawer.is-open .nav-drawer-link:nth-child(7) { transition-delay: 0.38s; opacity: 1; transform: translate3d(0,0,0); }
 
 .nav-drawer-age-section { margin-bottom: 16px; }
 
