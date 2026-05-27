@@ -120,6 +120,7 @@
 
 <script>
 (function() {
+  setTimeout(function() {
   const session = LJ_AUTH.getSession();
   if (!session) { window.location.href = 'login.html'; return; }
 
@@ -185,5 +186,6 @@
   };
 
   loadProfile(session);
+  }, 100);
 })();
 </script>
