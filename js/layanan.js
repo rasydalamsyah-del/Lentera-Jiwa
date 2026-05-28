@@ -155,9 +155,7 @@
       b.innerHTML='';
       var empty='<div style="text-align:center;padding:40px 16px;color:#8A82A8;">';
       if(EMB.tab==='live'){
-        var msgs=_liveMsgs||[];
-        if(!msgs.length){b.innerHTML=empty+'<div style="font-size:36px;margin-bottom:8px;">🌐</div><p style="font-size:13px;line-height:1.65;">Belum ada pesan.<br>Jadilah yang pertama menyapa!</p></div>';}
-        else msgs.forEach(function(msg){var mine=msg.username===m;b.insertAdjacentHTML('beforeend',rLive({id:msg.id,user:msg.nama||msg.username,text:msg.pesan,ts:new Date(msg.timestamp).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}),replyTo:null},mine));});
+        embRenderLive(); return;
       } else if(EMB.tab==='ai'){
         if(!EMB.aiMsgs.length){b.innerHTML=empty+'<div style="font-size:36px;margin-bottom:8px;">🤖</div><p style="font-size:13px;line-height:1.65;">Halo! Saya AI Lentera Jiwa.<br>Ceritakan yang ada di pikiranmu 💜</p></div>';}
         else EMB.aiMsgs.forEach(function(msg){b.insertAdjacentHTML('beforeend',rAI(msg));});
@@ -302,7 +300,36 @@ async function liveGetMessages() {
 }
 
 function embRenderLive() {
-  if (typeof embRender === 'function') embRender();
+  var b = document.getElementById('emb-body');
+  if (!b) return;
+  var m = '';
+  try { var s = JSON.parse(localStorage.getItem('lj_session')); m = s ? (s.username || '') : ''; } catch(e) {}
+  var empty = '<div style="text-align:center;padding:40px 16px;color:#8A82A8;">';
+  var msgs = _liveMsgs || [];
+  if (!msgs.length) {
+    b.innerHTML = empty + '<div style="font-size:36px;margin-bottom:8px;">🌐</div><p style="font-size:13px;line-height:1.65;">Belum ada pesan.<br>Jadilah yang pertama menyapa!</p></div>';
+    return;
+  }
+  var wasAtBottom = b.scrollHeight - b.scrollTop - b.clientHeight < 60;
+  b.innerHTML = '';
+  msgs.forEach(function(msg) {
+    var mine = msg.username === m;
+    var waktu = new Date(msg.timestamp).toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'});
+    var rq = '';
+    var bubStyle = mine
+      ? 'background:linear-gradient(135deg,#7B6FD4,#9B8FE4);color:#fff;border-radius:14px 0 14px 14px'
+      : 'background:rgba(255,255,255,0.85);color:#2D2550;border-radius:0 14px 14px 14px;border:1px solid rgba(123,111,212,0.12)';
+    var ini = (msg.nama || msg.username || '?').slice(0,2).toUpperCase();
+    var html = '<div style="display:flex;flex-direction:column;gap:4px;">'
+      + '<div style="display:flex;align-items:center;gap:6px;font-size:11px;color:#8A82A8;font-weight:600;' + (mine ? 'justify-content:flex-end' : '') + '">'
+      + '<div style="width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#7B6FD4,#9B8FE4);display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;font-weight:700;' + (mine ? 'order:2' : '') + '">'
+      + ini + '</div><span>' + (mine ? 'Kamu' : (msg.nama || msg.username)) + '</span><span>' + waktu + '</span></div>'
+      + '<div style="display:flex;flex-direction:column;' + (mine ? 'align-items:flex-end' : '') + '">'
+      + '<div style="padding:9px 13px;font-size:13px;line-height:1.6;max-width:85%;word-break:break-word;' + bubStyle + '">' + String(msg.pesan).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div>'
+      + '</div></div>';
+    b.insertAdjacentHTML('beforeend', html);
+  });
+  if (wasAtBottom) b.scrollTop = b.scrollHeight;
 }
 
 function liveStartPolling() {
