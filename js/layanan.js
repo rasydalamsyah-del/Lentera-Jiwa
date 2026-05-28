@@ -155,9 +155,9 @@
       b.innerHTML='';
       var empty='<div style="text-align:center;padding:40px 16px;color:#8A82A8;">';
       if(EMB.tab==='live'){
-        var msgs=sl(EMB.LIVE,[]);
+        var msgs=_liveMsgs||[];
         if(!msgs.length){b.innerHTML=empty+'<div style="font-size:36px;margin-bottom:8px;">🌐</div><p style="font-size:13px;line-height:1.65;">Belum ada pesan.<br>Jadilah yang pertama menyapa!</p></div>';}
-        else msgs.forEach(function(msg){b.insertAdjacentHTML('beforeend',rLive(msg,msg.user===m));});
+        else msgs.forEach(function(msg){var mine=msg.username===m;b.insertAdjacentHTML('beforeend',rLive({id:msg.id,user:msg.nama||msg.username,text:msg.pesan,ts:new Date(msg.timestamp).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}),replyTo:null},mine));});
       } else if(EMB.tab==='ai'){
         if(!EMB.aiMsgs.length){b.innerHTML=empty+'<div style="font-size:36px;margin-bottom:8px;">🤖</div><p style="font-size:13px;line-height:1.65;">Halo! Saya AI Lentera Jiwa.<br>Ceritakan yang ada di pikiranmu 💜</p></div>';}
         else EMB.aiMsgs.forEach(function(msg){b.insertAdjacentHTML('beforeend',rAI(msg));});
@@ -199,13 +199,13 @@
       if(!text)return;
       var m=me();inp.value='';inp.style.height='auto';
       if(EMB.tab==='live'){
-        var msg={id:'msg_'+Date.now()+'_'+Math.random().toString(36).slice(2,6),user:m,text:text,ts:ts(),replyTo:EMB.replyTarget||null};
-        var msgs=sl(EMB.LIVE,[]);msgs.push(msg);
-        if(msgs.length>120)msgs=msgs.slice(-120);
-        ss(EMB.LIVE,msgs);
         EMB.replyTarget=null;
         document.getElementById('emb-reply-bar').style.display='none';
-        embRender();
+        var token='';
+        try{var s=JSON.parse(localStorage.getItem('lj_session'));token=s?s.token:'';}catch(e){}
+        fetch(LIVE_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'sendChat',token:token,pesan:text})})
+        .then(function(r){return r.json();})
+        .then(function(d){if(d.ok)liveGetMessages();});
       } else if(EMB.tab==='ai'){
         EMB.aiMsgs.push({role:'user',text:text,ts:ts()});
         embRender();
@@ -276,15 +276,41 @@
     embRender();
     var oc=Math.floor(Math.random()*40+24);
     var oel=document.getElementById('emb-online');if(oel)oel.textContent=oc;
-    setInterval(function(){
-      if(EMB.tab==='live'&&document.getElementById('emb-body')){
-        var prev=sl(EMB.LIVE,[]).length;
-        setTimeout(function(){if(sl(EMB.LIVE,[]).length!==prev)embRender();},100);
-      }
-    },5000);
+    liveStartPolling();
   }
   initEmbeddedChat();
 
   initLayanan();
 
 })();
+// ── Chat Live Global (Spreadsheet) ──
+const LIVE_API = 'https://script.google.com/macros/s/AKfycbwXXLDgAb6ZmTVJSLb_FsgEIFzbgbOqt1gXsuK4C_QIks7UOXwV3B8MDc7qooWetyeqIw/exec';
+let _livePolling = null;
+let _liveMsgs = [];
+let _liveLastCount = 0;
+
+async function liveGetMessages() {
+  try {
+    const res = await fetch(LIVE_API + '?action=getChat');
+    const data = await res.json();
+    if (!data.ok) return;
+    if (data.messages.length === _liveLastCount) return;
+    _liveLastCount = data.messages.length;
+    _liveMsgs = data.messages;
+    if (typeof embRenderLive === 'function') embRenderLive();
+  } catch(e) {}
+}
+
+function embRenderLive() {
+  if (typeof embRender === 'function') embRender();
+}
+
+function liveStartPolling() {
+  liveGetMessages();
+  if (_livePolling) clearInterval(_livePolling);
+  _livePolling = setInterval(liveGetMessages, 4000);
+}
+
+function liveStopPolling() {
+  if (_livePolling) { clearInterval(_livePolling); _livePolling = null; }
+}
