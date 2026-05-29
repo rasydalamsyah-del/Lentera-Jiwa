@@ -201,8 +201,10 @@
         document.getElementById('emb-reply-bar').style.display='none';
         var token='';
         try{var s=JSON.parse(localStorage.getItem('lj_session'));token=s?s.token:'';}catch(e){}
-        fetch(LIVE_API,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'sendChat',token:token,pesan:text})})
-        .then(function(){setTimeout(liveGetMessages,1500);})
+        var sUrl=LIVE_API+'?action=sendChat&token='+encodeURIComponent(token)+'&pesan='+encodeURIComponent(text);
+        fetch(sUrl)
+        .then(function(r){return r.json();})
+        .then(function(d){if(d.ok)liveGetMessages();else alert('Gagal: '+JSON.stringify(d));})
         .catch(function(e){alert('Error: '+e.message);});
       } else if(EMB.tab==='ai'){
         EMB.aiMsgs.push({role:'user',text:text,ts:ts()});
@@ -278,7 +280,7 @@
   }
 
 // ── Chat Live Global (Spreadsheet) ──
-const LIVE_API = 'https://script.google.com/macros/s/AKfycbwXXLDgAb6ZmTVJSLb_FsgEIFzbgbOqt1gXsuK4C_QIks7UOXwV3B8MDc7qooWetyeqIw/exec';
+const LIVE_API = 'https://script.google.com/macros/s/AKfycbxxsDNCC84VIo4UjXuBuzF6q2F_PfVGNJpuWhapELL0eg8JCOFkNqjNfSRyAVp-yt8z9w/exec';
 let _livePolling = null;
 let _liveMsgs = [];
 let _liveLastCount = 0;
