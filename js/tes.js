@@ -105,19 +105,19 @@ const WELLBEING_QUESTIONS = [
   {
     id: 14, dimension: 'negative_affect',
     text: 'Seberapa sering kamu merasa sedih atau hampa tanpa tahu alasannya?',
-    options: ['Hampir tidak pernah', 'Beberapa kali seminggu', 'Hampir setiap hari', 'Setiap hari dan berkepanjangan'],
+    options: ['Hampir tidak pernah', 'Kadang-kadang', 'Cukup sering', 'Hampir setiap hari'],
     scores: [3, 2, 1, 0], reverse: true,
   },
   {
     id: 15, dimension: 'negative_affect',
     text: 'Seberapa sering pikiran negatif tentang dirimu sendiri muncul berulang-ulang?',
-    options: ['Jarang sekali', 'Kadang-kadang', 'Cukup sering', 'Sangat sering'],
+    options: ['Hampir tidak pernah', 'Kadang-kadang', 'Cukup sering', 'Hampir setiap hari'],
     scores: [3, 2, 1, 0], reverse: true,
   },
   {
     id: 16, dimension: 'negative_affect',
     text: 'Apakah kamu mengalami perubahan pola tidur yang mengganggu (terlalu banyak atau terlalu sedikit)?',
-    options: ['Tidak', 'Sedikit', 'Cukup terganggu', 'Sangat terganggu'],
+    options: ['Hampir tidak pernah', 'Kadang-kadang', 'Cukup sering', 'Hampir setiap hari'],
     scores: [3, 2, 1, 0], reverse: true,
   },
   /* DIMENSI: resilience */
@@ -299,7 +299,7 @@ const WELLBEING_INTERPRETATION = {
    */
   ranges: [
     {
-      min: 0, max: 14,
+      min: 44, max: 57,
       level: 'Flourishing',
       color: '#3DB87A',
       headline: 'Kesejahteraan Emosionalmu Kuat',
@@ -309,7 +309,7 @@ const WELLBEING_INTERPRETATION = {
       ctaHref: 'perpustakaan.html',
     },
     {
-      min: 15, max: 29,
+      min: 30, max: 43,
       level: 'Moderate Wellbeing',
       color: '#D4A92A',
       headline: 'Ada Ruang untuk Tumbuh',
@@ -319,7 +319,7 @@ const WELLBEING_INTERPRETATION = {
       ctaHref: 'artikel.html',
     },
     {
-      min: 30, max: 43,
+      min: 15, max: 29,
       level: 'Struggling',
       color: '#E88B6A',
       headline: 'Kamu Sedang Menanggung Beban yang Berat',
@@ -329,7 +329,7 @@ const WELLBEING_INTERPRETATION = {
       ctaHref: 'layanan.html',
     },
     {
-      min: 44, max: 57,
+      min: 0, max: 14,
       level: 'At Risk',
       color: '#C0392B',
       headline: 'Penting untuk Mendapat Dukungan Segera',
@@ -418,35 +418,35 @@ const STRES_INTERPRETATION = {
 const PERSONALITY_TRAITS = {
   O: {
     name: 'Keterbukaan terhadap Pengalaman',
-    thresholds: { low: 12, high: 18 }, /* dari max 24 */
+    thresholds: { low: 8, high: 15 }, /* dari max 24 */
     low:  { label: 'Konvensional & Praktis', desc: 'Kamu cenderung lebih suka hal-hal yang familiar, terstruktur, dan terbukti. Kamu adalah pemikir konkret yang menghargai tradisi dan kepastian.' },
     mid:  { label: 'Seimbang & Adaptif',     desc: 'Kamu memiliki keseimbangan antara kreativitas dan pragmatisme — bisa menikmati ide baru namun tetap menghargai struktur.' },
     high: { label: 'Kreatif & Eksploratif',  desc: 'Kamu memiliki rasa ingin tahu yang besar, terbuka pada perspektif baru, dan menikmati kedalaman intelektual. Kreativitas adalah nafasmu.' },
   },
   C: {
     name: 'Ketelitian',
-    thresholds: { low: 12, high: 18 },
+    thresholds: { low: 8, high: 15 },
     low:  { label: 'Fleksibel & Spontan',    desc: 'Kamu lebih suka fleksibilitas daripada rencana kaku. Kamu bekerja baik dalam kondisi yang membutuhkan adaptasi cepat.' },
     mid:  { label: 'Terorganisir & Adaptif', desc: 'Kamu bisa terorganisir saat dibutuhkan, namun tidak kaku. Keseimbangan ini memberimu fleksibilitas yang sehat.' },
     high: { label: 'Disiplin & Terencana',   desc: 'Kamu sangat dapat diandalkan, detail-oriented, dan memiliki standar tinggi untuk dirimu sendiri. Ketelitianmu adalah kekuatan besar.' },
   },
   E: {
     name: 'Ekstraversi',
-    thresholds: { low: 12, high: 18 },
+    thresholds: { low: 8, high: 15 },
     low:  { label: 'Introvert & Reflektif',  desc: 'Kamu mendapatkan energi dari kesendirian dan refleksi mendalam. Kamu lebih suka percakapan bermakna daripada interaksi sosial luas.' },
     mid:  { label: 'Ambivert yang Luwes',    desc: 'Kamu nyaman baik dalam situasi sosial maupun waktu menyendiri. Kemampuan beradaptasi ini adalah aset sosial yang berharga.' },
     high: { label: 'Ekstrover & Ekspresif',  desc: 'Kamu mendapatkan energi dari orang lain, ekspresif, dan menikmati menjadi bagian dari dinamika sosial yang aktif.' },
   },
   A: {
     name: 'Keramahan',
-    thresholds: { low: 12, high: 18 },
+    thresholds: { low: 8, high: 15 },
     low:  { label: 'Asertif & Independen',   desc: 'Kamu tidak mudah terpengaruh dan berani mengambil posisi yang berbeda. Ketegasan ini bisa menjadi kepemimpinan yang kuat jika diimbangi empati.' },
     mid:  { label: 'Kooperatif & Asertif',   desc: 'Kamu bisa berempati dan bekerja sama, namun juga tidak takut untuk menegakkan batasanmu.' },
     high: { label: 'Empatik & Kolaboratif',  desc: 'Kamu sangat peduli pada orang lain, kooperatif, dan menjadi perekat sosial dalam kelompok. Empatimu adalah hadiah bagi orang-orang di sekitarmu.' },
   },
   N: {
     name: 'Stabilitas Emosional',
-    thresholds: { low: 12, high: 18 },
+    thresholds: { low: 8, high: 15 },
     low:  { label: 'Stabil & Tangguh',       desc: 'Kamu cenderung tenang di bawah tekanan dan tidak mudah terguncang. Stabilitas emosionalmu membuat orang nyaman bersandar padamu.' },
     mid:  { label: 'Sensitif & Seimbang',    desc: 'Kamu memiliki sensitivitas emosional yang sehat — bisa merasakan dengan dalam namun tetap bisa mengelola diri.' },
     high: { label: 'Sensitif & Mendalam',    desc: 'Kamu merasakan emosi dengan intensitas tinggi — baik yang menyenangkan maupun yang menantang. Sensitivitasmu adalah kekuatan kreatif, namun perlu strategi regulasi yang baik.' },
@@ -557,7 +557,47 @@ function calculateStresScore(answers) {
     r => total >= r.min && total <= r.max
   ) || STRES_INTERPRETATION.ranges[STRES_INTERPRETATION.ranges.length - 1];
 
-  return { total, maxTotal, percentile, result, subdimensions: subScores };
+  /* ── Burnout Profile (MBI — evaluasi per dimensi, bukan total) ── */
+  const maxExh  = 9; /* 3 soal × max 3 */
+  const maxCyn  = 9;
+  const exhRaw  = subScores['exhaustion']  || 0;
+  const cynRaw  = subScores['cynicism']    || 0;
+  const exhPct  = Math.round((exhRaw / maxExh) * 100);
+  const cynPct  = Math.round((cynRaw / maxCyn) * 100);
+
+  let burnoutProfile;
+  if (exhPct >= 67 && cynPct >= 67) {
+    burnoutProfile = {
+      type:  'Burnout Penuh',
+      color: '#C0392B',
+      desc:  'Kamu mengalami kelelahan tinggi DAN sinisme tinggi — kombinasi paling kritis menurut Maslach. Keduanya perlu ditangani segera.',
+    };
+  } else if (exhPct >= 67 && cynPct < 67) {
+    burnoutProfile = {
+      type:  'Kelelahan Dominan',
+      color: '#E88B6A',
+      desc:  'Energimu terkuras habis, namun kamu masih peduli dengan pekerjaanmu. Istirahat terstruktur adalah prioritas utama sekarang.',
+    };
+  } else if (exhPct < 67 && cynPct >= 67) {
+    burnoutProfile = {
+      type:  'Sinisme Dominan',
+      color: '#D4A92A',
+      desc:  'Kamu masih punya energi fisik, namun koneksi emosional dengan pekerjaanmu sudah melemah signifikan. Ini sinyal awal burnout yang perlu diatasi.',
+    };
+  } else {
+    burnoutProfile = {
+      type:  'Tidak Ada Burnout Signifikan',
+      color: '#3DB87A',
+      desc:  'Skor kelelahan dan sinisme keduanya dalam batas sehat. Pertahankan keseimbangan yang sudah kamu bangun.',
+    };
+  }
+
+  const burnoutDetail = {
+    exhaustion: { raw: exhRaw, max: maxExh, pct: exhPct },
+    cynicism:   { raw: cynRaw, max: maxCyn, pct: cynPct },
+  };
+
+  return { total, maxTotal, percentile, result, subdimensions: subScores, burnoutProfile, burnoutDetail };
 }
 
 /**
